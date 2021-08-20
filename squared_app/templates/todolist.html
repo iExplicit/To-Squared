@@ -1,0 +1,100 @@
+{% if user.is_authenticated %}
+<div class="container">
+    <ul class="nav nav-pills pull-right">
+        <li role="presentation" class="">
+            <a href="{% url 'index' %}"  class="color">Home</a>
+        </li>
+        <li>
+            <a href="{% url 'create' %}" class="color_item">Add Item</a>
+        </li>
+    </ul>
+</div>
+<div class="text-left">
+    <h1>Pending</h1>        
+</div>
+<div class="row marketing">
+    <div class="todolist list-group">
+        <ul class="list-unstyled"> 
+            {% if items|length == 0 %}
+                <div class="alert alert-warning">
+                    <p>No items in the list.</p>
+                </div>
+            {% else %}
+                {% if count_pending_items == 0 %}
+                    <div class="alert alert-warning">
+                        <p>No items in the list.</p>
+                    </div>          
+                {% else %}
+                    {% for item in items %}
+                        {% if item.done == False %}
+                            <li class="list-group-item {% if item.done %}done{% endif %}">
+                                <div class="completed-check">
+                                    <input type="checkbox" data-id="{{item.id}}" onClick = "window.location.reload(true);"  class="todo-complete-check" {% if item.pending %}checked{% endif %} />
+                                </div>
+                                <div class="todo-title">
+                                    <div class="todo-actions">
+                                        <a href="{% url 'edit' item.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                                        <a href="{% url 'delete' item.id %}"><span class="glyphicon glyphicon-remove"></span> Remove</a>
+                                    </div>
+                                    <h4 class="list-group-item-heading">
+                                    <b>{{item.title}}</b> <h5>{{item.description}}</h5></h4>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %} 
+                {% endif %} 
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<h1 class="text-left">Done</h1>
+<div class="text-left">
+    <div class="todolist list-group">
+        <ul class="list-unstyled">
+            {% if items|length == 0 %}
+                <div class="alert alert-warning">
+                    <p>No items in the list.</p>
+                </div>
+                {% else %}
+                    {% if count_done_items == 0 %}
+                        <div class="alert alert-warning">
+                            <p>No items in the list.</p>
+                        </div>
+                    {% else %}
+                        {% for item in items %}
+                            {% if item.done %}
+                                <li class="list-group-item {% if item.done %}done{% endif %}">
+                            <div class="completed-check">
+                                <input
+                                type="checkbox" data-id="{{item.id}}" onClick = "window.location.reload(true);" class="todo-complete-check" 
+                                {% if item.done %}checked{% endif %}
+                                />
+                    
+                        </div>
+                        
+                        <div class="todo-title">
+                            <div class="todo-actions">
+                                <a href="{% url 'edit' item.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                                <a href="{% url 'delete' item.id %}"><span class="glyphicon glyphicon-remove"></span> Remove</a>
+                        </div>
+                        <h4 class="list-group-item-heading">
+                        <b style="color:gray;"><s>{{item.title}}</s></b> <h5 style="color:gray;">{{item.description}}</h5></h4>
+
+                        </div>
+                    </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+{% else %}
+
+<div class="jumbotron">
+    <p>You need to <a href="{% url 'login' %}">login</a> first to view the todolist.</p>
+</div>
+{% endif %}
+
